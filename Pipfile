@@ -1,0 +1,15 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+name = "pypi"
+verify_ssl = true
+
+[requires]
+python_version = "3.6"
+
+
+[dev-packages]
+ptpython = "*"
+
+[packages]
+luigi = "*"
