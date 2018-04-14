@@ -1,4 +1,6 @@
 # voxceleb-luigi
+[![pypi version](http://img.shields.io/pypi/v/voxceleb_luigi.svg?style=flat)](https://pypi.python.org/pypi/voxceleb_luigi)
+
 Luigi pipeline to download VoxCeleb audio from YouTube and extract speaker segments.
 
 This pipeline can download both the original [VoxCeleb](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/) and [VoxCeleb2](http://www.robots.ox.ac.uk/~vgg/data/voxceleb2/).
