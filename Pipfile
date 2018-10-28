@@ -9,6 +9,7 @@ python_version = "3.6"
 
 
 [dev-packages]
+voxceleb_luigi = {path = ".", editable = true}
 ptpython = "*"
 
 [packages]

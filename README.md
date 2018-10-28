@@ -3,7 +3,7 @@
 
 Luigi pipeline to download VoxCeleb audio from YouTube and extract speaker segments.
 
-This pipeline can download both the original [VoxCeleb](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/) and [VoxCeleb2](http://www.robots.ox.ac.uk/~vgg/data/voxceleb2/).
+This pipeline can download both [VoxCeleb](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/vox1.html) and [VoxCeleb2](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/vox2.html).
 
 ## Installation
 
@@ -16,25 +16,40 @@ You need to have `ffmpeg` and `youtube-dl` installed. On systems with `apt`, you
 
 ## Usage
 
-Some configuration is necessary, the easiest way is to put it in your `luigi.cfg` (default location is the current working directory; you can override this by setting the `LUIGI_CONFIG_PATH` environment variable).
+Download and unpack at least one of the metadata directories with the YouTube URLs and timestamps (VC1 [dev](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/data/vox1_dev_txt.zip)/[test](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/data/vox1_test_txt.zip), VC2 [dev](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/data/vox2_dev_txt.zip)/[test](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/data/vox2_test_txt.zip)).
 
-    [voxceleb.Config]
-    # Necessary, otherwise the pipeline will try to save data to /
-    data_out_dir=/path/to/voxceleb
-
-    # Only necessary if youtube-dl, ffmpeg, and ffprobe are not in your PATH:
-    ffmpeg_bin=/ffmpeg-dir/ffmpeg
-    ffmpeg_directory=/ffmpeg-dir
-    youtube_dl_bin=/path/to/youtube-dl
-
-    # 1 for VoxCeleb, 2 for VoxCeleb2 (default)
-    dataset=2
-
-
-To run the pipeline, first start luigid:
+Start luigid, the central scheduler:
 
     luigid --background
 
-and then start the workers:
+Then start the worker process:
 
-    luigi --module voxceleb_luigi --workers 5 voxceleb.ProcessPeople
+    luigi --module voxceleb_luigi \
+        --workers 4 \
+        voxceleb.ProcessDirectory \
+        --path /path/to/metadata
+
+The pipeline will recursively search `/path/to/metadata` for the segment files (by looking for files called like `00001.txt` etc.), download the audio of their source videos, and extract the speaker segments.
+
+By default, the segment audio files are stored in parallel to the metadata in directories called `wav` that get created next to the `txt` directories. Suppose you have the metadata of the dev and test sets of VoxCeleb1 in `~/vc1` with paths looking like `~/vc1/dev/txt/idX/videoX/XXXXX.txt`. If you pass `--path ~/vc1` to the pipeline, segments will end up in `~/vc1/dev/wav/idX/videoX/XXXXX.wav`. Other output of the pipeline (full audio of videos, soft failures, dummy outputs for completed directories) are stored in `./voxceleb-luigi-files` by default.
+
+
+## Configuration
+
+Both the location where the dataset gets created and the storage directory for the pipeline can be changed through parameters in the `luigi.cfg` (default location is the current working directory; you can override this via the `LUIGI_CONFIG_PATH` environment variable):
+
+    [voxceleb.Config]
+    # Required
+    output_dir=/where/to/store/wav/segments
+    pipeline_dir=/where/to/put/pipeline/stuff
+
+    ## Only necessary if youtube-dl, ffmpeg, and ffprobe are not in your PATH:
+    #ffmpeg_bin=/ffmpeg-dir/ffmpeg
+    #ffmpeg_directory=/ffmpeg-dir # passed on to youtube-dl via --ffmpeg-location
+    #youtube_dl_bin=/path/to/youtube-dl
+
+    [voxceleb.ProcessDirectory]
+    ## alternative to the --path command line option
+    #path=/path/to/metadata
+
+When `output_dir` is set, the directory structure of the metadata is mirrored in this directory. In this case, the `txt` directories are not replaced by `wav`, but removed from the path.

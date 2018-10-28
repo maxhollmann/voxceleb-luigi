@@ -1,7 +1,7 @@
 import traceback
 import luigi
 
-from .util import data_out_path
+from .util import pipeline_path
 
 
 class softly_failing:
@@ -64,7 +64,7 @@ class SoftFailureTarget(luigi.LocalTarget):
     def __init__(self, task_id):
         self._task_id = task_id
         self._task_fam = task_id.split("_", 1)[0]
-        path = data_out_path('soft_failures', self._task_fam, self._task_id)
+        path = pipeline_path('soft_failures', self._task_fam, self._task_id)
         super().__init__(path)
 
 

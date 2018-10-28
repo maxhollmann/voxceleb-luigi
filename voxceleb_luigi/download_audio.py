@@ -1,6 +1,6 @@
 import luigi
 
-from .util import data_out_path, Config, check_output
+from .util import pipeline_path, Config, check_output
 from .soft_failure import softly_failing
 from .atomized_local_target import AtomizedLocalTarget
 
@@ -12,13 +12,13 @@ import re
 class DownloadAudio(luigi.Task):
     task_namespace = 'voxceleb'
 
-    priority = 4
+    priority = 1000
 
     video = luigi.Parameter()
 
     def output(self):
         return luigi.LocalTarget(
-            data_out_path('audio', '{}.wav'.format(self.video)))
+            pipeline_path('DownloadAudio', '{}.wav'.format(self.video)))
 
     def run(self):
         with AtomizedLocalTarget(self.output()) as target:

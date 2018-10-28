@@ -8,7 +8,7 @@ with (Path(__file__).resolve().parent / 'README.md').open(encoding='utf-8') as f
 
 setup(
     name='voxceleb_luigi',
-    version='0.1.2',
+    version='0.2.0',
     description='Luigi pipeline to download VoxCeleb audio from YouTube and extract speaker segments',
     long_description=long_description,
     long_description_content_type='text/markdown',
