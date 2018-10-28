@@ -17,10 +17,17 @@ setup(
     license='MIT',
     packages=['voxceleb_luigi'],
     zip_safe=False,
-    classifiers=[
+    classifiers=[ # https://pypi.org/pypi?%3Aaction=list_classifiers
         'License :: OSI Approved :: MIT License',
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.6',
+        'Topic :: Multimedia',
+        'Topic :: Multimedia :: Sound/Audio',
+        'Topic :: Multimedia :: Sound/Audio :: Speech',
     ],
     install_requires=['luigi'],
 )
